@@ -240,3 +240,4 @@ fabric.properties
 botpy.log
 test.py
 secret_info.json
+user_data.json
