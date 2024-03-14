@@ -163,13 +163,13 @@ class MyClient(botpy.Client):
         # 隐藏功能：亲亲
         elif content == "亲亲":
             print(f"{user_name}进行了亲亲")
-            await message.reply(content=f"@<{user_name}>只能偷偷亲一下哦～")
+            await message.reply(content=f"<@{user_name}>只能偷偷亲一下哦～")
         
         
         # 隐藏功能：抱抱
         elif content == "抱抱":
             print(f"{user_name}进行了抱抱")
-            await message.reply(content=f"@<{user_name}>那就来抱抱吧！嗯唔～")
+            await message.reply(content=f"<@{user_name}>那就来抱抱吧！嗯唔～")
 
 
         # 将修改过的user_data重新写入users_data并更新json文件
