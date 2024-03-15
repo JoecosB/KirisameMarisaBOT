@@ -31,15 +31,37 @@ HELP_INFO = '''雾雨魔理沙现有功能:
 3. 随机金句
 4. 猫猫
 5. 今日运势
+6. 签到
+7. 商店
+8. 背包
+9. 查看魔力
 
 更多功能敬请期待!'''
+
+# 设置魔法店信息
+STORE_ITEM = '''雾雨魔法店商品列表：
+1.【魔法晶种】        20魔力值
+2.【一次性八卦炉】    200魔力值
+3.【河童隐身逃跑科技】 50魔力值 
+4.【鲣鱼昆布茶泡饭】  150魔力值
+
+请@我， 输入[购买][空格][商品名称][空格][数量]来购买物品哦
+'''
+ITEM_PRICE = {
+    "魔法晶种":20,
+    "一次性八卦炉":200,
+    "河童隐身逃跑科技":50,
+    "鲣鱼昆布茶泡饭":150
+}
+
 
 # 机器人类
 class MyClient(botpy.Client):
 
     async def on_at_message_create(self, message: Message):
         # 获取信息内容和发送信息用户id
-        content = re.search(r"> (\w+)", message.content).group(1)
+        content = re.search(r"> (.*)", message.content).group(1)
+
         user_name = message.author.username
         userID = message.author.id
 
@@ -47,8 +69,13 @@ class MyClient(botpy.Client):
         try:
             user_data = users_data[f"{userID}"]
         except KeyError:
-            users_data[f"{userID}"] = {"user_luck":{"luck_date":f"{int(today_date)-1}", "luck_rate":0}}
+            users_data[f"{userID}"] = {}
             user_data = users_data[f"{userID}"]
+            user_data["user_luck"] = {"luck_date":f"{int(today_date)-1}", "luck_rate":0}
+            user_data["mana"] = 0
+            user_data["last_check_in"] = str(0)
+            user_data["storage"] = {}
+
 
         # 功能：测试bot是否存活
         if content == "测试":
@@ -152,6 +179,125 @@ class MyClient(botpy.Client):
             # 把user_data更新
                 user_data['user_luck']['luck_date'] = date
                 user_data['user_luck']['luck_rate'] = luck
+
+
+        # 功能：签到
+        elif content == "签到":
+            print(f"{user_name}进行了签到")
+
+            # 读取用户签到状态，若今天已经签到，则不签到
+            if user_data["last_check_in"] == today_date:
+                await message.reply(content=f"<@{user_name}>您今天已经签过到啦～贪心的人会受到幻想乡的惩罚哦")
+            
+            else:
+                user_data["mana"] += 100
+                mana = user_data["mana"]
+
+                await message.reply(content=f"<@{user_name}>签到成功!\n你从雾雨魔法店获得了100点魔力值。你现在共有{mana}点魔力值。")
+                user_data["last_check_in"] = today_date
+
+
+        # 功能：展示雾雨魔法店商品列表
+        elif content == "雾雨魔法店":
+            print(f"{user_name}访问了雾雨魔法店")
+            await message.reply(content=f"{STORE_ITEM}")
+
+
+        # 功能：购买商品
+        elif content[0:2] == "购买":
+            print(f"{user_name}进行了购买")
+
+            # 读取用户背包信息
+            user_storage = user_data["storage"]
+
+            # 获取用户购买商品名称和购买数量
+            item = re.findall(r"(?<=\s).+?(?=\s)", content)[0]
+            count = int(re.findall(r"\d+$", content)[0])
+
+            # 查询用户输入的物品是否在商店中
+            in_store = 1
+            try:
+                price = ITEM_PRICE[f"{item}"]*count
+            except KeyError:
+                price = 100000
+                await message.reply(content=f"<@{user_name}>小店没有您要买的这件东西呢～看看有没有其他感兴趣的吧！")
+                in_store = 0
+
+            # 判断用户是否买得起该数量的该物品
+            if int(user_data["mana"]) >= price:
+                affordable = 1
+            else:
+                affordable = 0
+
+            # 若物品在商店中且买得起，则继续购买流程
+            if in_store and affordable:
+
+                # 查询用户是否曾经拥有过该物品, 若不曾拥有，则在user_storage中创建该物品的键
+                try:
+                    user_storage[f"{item}"] += count
+                except KeyError:
+                    user_storage[f"{item}"] = count
+                await message.reply(content=f"<@{user_name}>交易成功！\n您共花费了{price}魔力值，购买了{count}个「{item}」")
+
+                # 从用户的账户中扣除对应魔力值
+                user_data["mana"] = int(user_data["mana"]) - price
+            
+            # 若物品在商店中但买不起，则终止交易并返回信息
+            else:
+                if in_store and not affordable:
+                    await message.reply(content=f"<@{user_name}>您的魔力值不够呢！试着每天签到，坚持每日签到、种植魔晶吧！")
+
+            # 更新user_data
+            user_data["storage"] = user_storage
+
+
+        # 功能：查看背包
+        elif content == "背包":
+            print(f"{user_name}查看了背包")
+
+            # 从user_data中提取user_storage
+            user_storage = user_data["storage"]
+
+            # 遍历user_storage中的物品，并整合到字符串output中
+            output = "您的背包中有："
+            for item in user_storage.keys():
+                count = user_storage[f"{item}"]
+                output += f"\n{count}个「{item}」"
+
+            # 将output发送给用户
+            await message.reply(content=f"<@{user_name}>{output}")
+
+
+        # 功能：查看魔力值
+        elif content == "魔力查询":
+            print(f"{user_name}查询了魔力")
+
+            # 从user_data中读取mana，并发送给用户
+            mana = user_data["mana"]
+            await message.reply(content=f"您有{mana}点魔力值哦")
+
+
+        # 功能：种植魔晶
+        elif content == "种植魔晶":
+            print(f"{user_name}进行了魔晶种植")
+
+            # 尝试查询用户的农场，若农场不存在，则创建新的农场
+            try:
+                farm = user_data["farm"]
+            except KeyError:
+                user_data["farm"] = {"lv":"1", "planted":"false", "last_plant_date":"0"}
+                farm = user_data["farm"]
+            
+            # 判断是否已经有种植魔晶，若未种植则种植
+            if farm["planted"] == "false":
+                farm["planted"] = "true"
+                farm["last_plant_date"] = str(today_date)
+                await message.reply(content=f"<@{user_name}>您已成功种植魔晶！记得明天来收获哦～")
+            else:
+                await message.reply(content=f"<@{user_name}>您已经有种植好的魔晶啦！")
+
+            # 更新user_data
+            user_data["farm"] = farm
 
 
         # 功能：发送已有功能列表
