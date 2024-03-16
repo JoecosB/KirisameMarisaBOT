@@ -34,9 +34,16 @@ HELP_INFO = '''雾雨魔理沙现有功能:
 6. 签到
 7. 商店
 8. 背包
-9. 查看魔力
+9. 魔力查询
+有关「农场」请查询“农场帮助”
 
 更多功能敬请期待!'''
+
+FARM_INFO = '''农场帮助：
+1. 种植魔晶
+2. 查询等级
+3. 收获
+'''
 
 # 设置魔法店信息
 STORE_ITEM = '''雾雨魔法店商品列表：
@@ -258,14 +265,22 @@ class MyClient(botpy.Client):
             # 从user_data中提取user_storage
             user_storage = user_data["storage"]
 
-            # 遍历user_storage中的物品，并整合到字符串output中
+            # 遍历user_storage中的物品，并整合到字符串output中; 同时计算背包中拥有的物品数量
             output = "您的背包中有："
+            item_count = 0
             for item in user_storage.keys():
                 count = user_storage[f"{item}"]
-                output += f"\n{count}个「{item}」"
 
-            # 将output发送给用户
-            await message.reply(content=f"<@{user_name}>{output}")
+                # 如果count是0，则不输出此物品
+                if count != 0:
+                    item_count += 1
+                    output += f"\n{count}个「{item}」"
+            
+            #检测item_count，若是0则返回特殊消息
+            if item_count != 0:
+                await message.reply(content=f"<@{user_name}>{output}")
+            else:
+                await message.reply(content=f"<@{user_name}>您的背包空空如也呢，快来逛逛雾雨魔法店吧！")
 
 
         # 功能：查看魔力值
@@ -288,8 +303,23 @@ class MyClient(botpy.Client):
                 user_data["farm"] = {"lv":"1", "planted":"false", "last_plant_date":"0"}
                 farm = user_data["farm"]
             
+            # 查询用户背包中是否有魔晶种子
+            have_seed = 1
+            user_storage = user_data["storage"]
+            try:
+                seed = user_storage["魔法晶种"]
+            except KeyError:
+                have_seed = 0
+                await message.reply(content=f"<@{user_name}>您还没有购买魔晶种子呢！快去雾雨魔法店看看吧！")
+
+            # 检测魔晶种子数量，若数量小于1则不种植
+            if seed != 0:
+                seed -= 1
+            else:
+                await message.reply(content=f"<@{user_name}>您还没有购买魔晶种子呢！快去雾雨魔法店看看吧！")
+            
             # 判断是否已经有种植魔晶，若未种植则种植
-            if farm["planted"] == "false":
+            if farm["planted"] == "false" and have_seed:
                 farm["planted"] = "true"
                 farm["last_plant_date"] = str(today_date)
                 await message.reply(content=f"<@{user_name}>您已成功种植魔晶！记得明天来收获哦～")
@@ -297,6 +327,8 @@ class MyClient(botpy.Client):
                 await message.reply(content=f"<@{user_name}>您已经有种植好的魔晶啦！")
 
             # 更新user_data
+            user_storage["魔法晶种"] = seed
+            user_data["storage"] = user_storage
             user_data["farm"] = farm
 
 
