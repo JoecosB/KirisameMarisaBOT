@@ -15,7 +15,6 @@ with open("secret_info.json") as info_file:
 # 读取今天的日期
 today_date = datetime.date.today().strftime('%d')
 
-
 # 读取服务端的用户信息
 with open("user_data.json") as data:
     try:
@@ -41,7 +40,6 @@ HELP_INFO = '''雾雨魔理沙现有功能:
 
 FARM_INFO = '''农场帮助：
 1. 种植魔晶
-2. 查询等级
 3. 收获
 '''
 
@@ -197,10 +195,11 @@ class MyClient(botpy.Client):
                 await message.reply(content=f"<@{user_name}>您今天已经签过到啦～贪心的人会受到幻想乡的惩罚哦")
             
             else:
-                user_data["mana"] += 100
+                add_mana = 100 + randint(-30, 30)
+                user_data["mana"] += add_mana
                 mana = user_data["mana"]
 
-                await message.reply(content=f"<@{user_name}>签到成功!\n你从雾雨魔法店获得了100点魔力值。你现在共有{mana}点魔力值。")
+                await message.reply(content=f"<@{user_name}>签到成功!\n你从雾雨魔法店获得了{add_mana}点魔力值。你现在共有{mana}点魔力值。")
                 user_data["last_check_in"] = today_date
 
 
@@ -289,7 +288,7 @@ class MyClient(botpy.Client):
 
             # 从user_data中读取mana，并发送给用户
             mana = user_data["mana"]
-            await message.reply(content=f"您有{mana}点魔力值哦")
+            await message.reply(content=f"<@{user_name}>您有{mana}点魔力值哦")
 
 
         # 功能：种植魔晶
@@ -300,22 +299,23 @@ class MyClient(botpy.Client):
             try:
                 farm = user_data["farm"]
             except KeyError:
-                user_data["farm"] = {"lv":"1", "planted":"false", "last_plant_date":"0"}
+                user_data["farm"] = {"lv":"1", "planted":"false", "last_plant_date":"0", "exp":"0"}
                 farm = user_data["farm"]
             
-            # 查询用户背包中是否有魔晶种子
-            have_seed = 1
+            # 查询用户背包中是否存在过魔法晶种
             user_storage = user_data["storage"]
             try:
                 seed = user_storage["魔法晶种"]
             except KeyError:
-                have_seed = 0
-                await message.reply(content=f"<@{user_name}>您还没有购买魔晶种子呢！快去雾雨魔法店看看吧！")
+                user_storage["魔法晶种"] = 0
+                seed = user_storage["魔法晶种"]
 
             # 检测魔晶种子数量，若数量小于1则不种植
             if seed != 0:
                 seed -= 1
+                have_seed = 1
             else:
+                have_seed = 0
                 await message.reply(content=f"<@{user_name}>您还没有购买魔晶种子呢！快去雾雨魔法店看看吧！")
             
             # 判断是否已经有种植魔晶，若未种植则种植
@@ -323,7 +323,7 @@ class MyClient(botpy.Client):
                 farm["planted"] = "true"
                 farm["last_plant_date"] = str(today_date)
                 await message.reply(content=f"<@{user_name}>您已成功种植魔晶！记得明天来收获哦～")
-            else:
+            elif farm["planted"] == "true":
                 await message.reply(content=f"<@{user_name}>您已经有种植好的魔晶啦！")
 
             # 更新user_data
@@ -332,10 +332,60 @@ class MyClient(botpy.Client):
             user_data["farm"] = farm
 
 
+        # 功能：收获魔晶
+        elif content == "收获":
+            print(f"{user_name}收获了魔晶")
+
+            # 尝试查询用户的农场，若农场不存在，则创建新的农场
+            try:
+                farm = user_data["farm"]
+            except KeyError:
+                user_data["farm"] = {"lv":"1", "planted":"false", "last_plant_date":"0", "exp":"0"}
+                farm = user_data["farm"]
+            farm_lv = farm['lv']
+            farm_exp = farm['exp']
+            
+            # 查询用户农场中是否有种植的魔晶，并判断种植时间是不是今天
+            if farm["planted"] != "false" and int(farm["last_plant_date"]) != today_date:
+                condition = 1
+            else:
+                condition = 0
+
+            # 如果条件符合则开始收获，反之停止收获
+            if condition == 0:
+                await message.reply(content=f"<@{user_name}>你还没有种植魔晶哦～快去种植吧！")
+            else:
+                farm["planted"] = 'false'
+
+                # 增加用户的魔力值和农场经验
+                add_mana = 200*(1+farm_lv/10) + randint(-50, 50)
+                user_data['mana'] += add_mana
+                add_exp = 3 + randint(-2, 2)
+                farm_exp = add_exp
+            
+            # 判断用户的农场是否可以升级
+            if farm_exp >= 20:
+                farm_lv += 1
+                farm_exp -= 20
+            
+            # 向用户反馈收获成果
+            await message.reply(content=f"<@{user_name}>收获成功, 获得了{add_mana}点魔力值！您现在的农场等级为{farm_lv}，距离下一级还有{20-farm_exp}经验值")
+            
+            # 更新user_data
+            farm['lv'] = farm_lv
+            farm['exp'] = farm_exp
+            user_data['farm'] = farm
+
+
         # 功能：发送已有功能列表
-        elif content == "帮助":
+        elif content[-2:] == "帮助":
             print(f"{user_name}请求了帮助")
-            await message.reply(content=f"{HELP_INFO}")
+
+            if content == "帮助":
+                await message.reply(content=f"{HELP_INFO}")
+
+            elif content == "农场帮助":
+                await message.reply(content=f"{FARM_INFO}")
         
 
         # 隐藏功能：亲亲
