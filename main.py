@@ -9,19 +9,24 @@ from botpy.message import Message
 from random import randint
 
 # 读取机器人的id和访问密钥
-with open("secret_info.json") as info_file:
+with open("./json/secret_info.json") as info_file:
     secret = json.load(info_file)
 
 # 读取今天的日期
 today_date = datetime.date.today().strftime('%d')
 
 # 读取服务端的用户信息
-with open("user_data.json") as data:
+with open("./json/user_data.json") as data:
     try:
         users_data = json.load(data)
     except json.decoder.JSONDecodeError:
         print("服务端没有user_data.json文件, 已在脚本目录下创建。")
         users_data = {}
+
+# 读取运势解读
+with open("./json/stories.json") as data:
+    stories = json.load(data)
+FATES = stories["fates"]
 
 # 设置帮助信息
 HELP_INFO = '''雾雨魔理沙现有功能:
@@ -83,13 +88,13 @@ class MyClient(botpy.Client):
 
 
         # 功能：测试bot是否存活
-        if content == "测试":
+        if content == "/测试":
             print(f"{user_name}进行了测试")
             await message.reply(content=f"<@{user_name}>沙沙一直在的啦～")
 
 
         # 功能：偷看我的屏幕
-        elif content == "窥屏":
+        elif content == "/窥屏":
             print(f"{user_name}进行了窥屏")
             await message.reply(content="让我看看那个死宅在做什么...稍等片刻DAZE☆")
 
@@ -106,7 +111,7 @@ class MyClient(botpy.Client):
 
 
         # 功能：获取好康的
-        elif content == "随机二次元":
+        elif content == "/随机二次元":
             print(f"{user_name}进行了随机二次元")
             await message.reply(content="获取二次元中...")
 
@@ -121,7 +126,7 @@ class MyClient(botpy.Client):
 
 
         # 功能：随机金句
-        elif content == "随机金句":
+        elif content == "/随机金句":
             print(f"{user_name}进行了随机金句")
             await message.reply(content="翻阅姆Q那里「借」来的书中...")
 
@@ -136,7 +141,7 @@ class MyClient(botpy.Client):
 
 
         # 功能：猫猫
-        elif content == "猫猫":
+        elif content == "/猫猫":
             print(f"{user_name}进行了猫猫")
             await message.reply(content="获取猫猫中...")
 
@@ -159,9 +164,8 @@ class MyClient(botpy.Client):
 
 
         # 功能：占卜
-        elif content == "今日运势":
+        elif content == "/占卜":
             print(f"{user_name}请求了今日运势")
-            await message.reply(content="沙沙可是能看见你的未来的哦～")
 
             # 从user_data中读取user_luck部分
             user_luck = user_data['user_luck']
@@ -179,15 +183,19 @@ class MyClient(botpy.Client):
             luck_class = int(luck/16.6666)
             luck_name = ["大凶", "中凶", "末凶", "末吉", "中吉", "大吉"][luck_class]
             with open(f"luck_imgs/{luck_class}.png", "rb") as image:
-                await message.reply(content=f"您今天的运气值是{luck}, 属于「{luck_name}」哦！", file_image = image)
+                await message.reply(file_image = image, content=f"<@{user_name}>今天的运气值是{luck}, 属于「{luck_name}」哦！")
+
+            # 发送对应的运势解读
+            interpret = FATES[f"{luck_class}"]
+            await message.reply(content=interpret)
 
             # 把user_data更新
-                user_data['user_luck']['luck_date'] = date
-                user_data['user_luck']['luck_rate'] = luck
+            user_data['user_luck']['luck_date'] = date
+            user_data['user_luck']['luck_rate'] = luck
 
 
         # 功能：签到
-        elif content == "签到":
+        elif content == "/签到":
             print(f"{user_name}进行了签到")
 
             # 读取用户签到状态，若今天已经签到，则不签到
@@ -204,13 +212,13 @@ class MyClient(botpy.Client):
 
 
         # 功能：展示雾雨魔法店商品列表
-        elif content == "雾雨魔法店":
+        elif content == "/雾雨魔法店":
             print(f"{user_name}访问了雾雨魔法店")
             await message.reply(content=f"{STORE_ITEM}")
 
 
         # 功能：购买商品
-        elif content[0:2] == "购买":
+        elif content[0:2] == "/购买":
             print(f"{user_name}进行了购买")
 
             # 读取用户背包信息
@@ -258,7 +266,7 @@ class MyClient(botpy.Client):
 
 
         # 功能：查看背包
-        elif content == "背包":
+        elif content == "/背包":
             print(f"{user_name}查看了背包")
 
             # 从user_data中提取user_storage
@@ -283,7 +291,7 @@ class MyClient(botpy.Client):
 
 
         # 功能：查看魔力值
-        elif content == "魔力查询":
+        elif content == "/魔力查询":
             print(f"{user_name}查询了魔力")
 
             # 从user_data中读取mana，并发送给用户
@@ -292,7 +300,7 @@ class MyClient(botpy.Client):
 
 
         # 功能：种植魔晶
-        elif content == "种植魔晶":
+        elif content == "/种植魔晶":
             print(f"{user_name}进行了魔晶种植")
 
             # 尝试查询用户的农场，若农场不存在，则创建新的农场
@@ -333,7 +341,7 @@ class MyClient(botpy.Client):
 
 
         # 功能：收获魔晶
-        elif content == "收获":
+        elif content == "/收获":
             print(f"{user_name}收获了魔晶")
 
             # 尝试查询用户的农场，若农场不存在，则创建新的农场
@@ -378,7 +386,7 @@ class MyClient(botpy.Client):
 
 
         # 功能：发送已有功能列表
-        elif content[-2:] == "帮助":
+        elif content[-2:] == "/帮助":
             print(f"{user_name}请求了帮助")
 
             if content == "帮助":
@@ -402,7 +410,7 @@ class MyClient(botpy.Client):
 
         # 将修改过的user_data重新写入users_data并更新json文件
         users_data[f"{userID}"] = user_data
-        with open("user_data.json", "w") as file:
+        with open("./json/user_data.json", "w") as file:
             json.dump(users_data, file, indent=4)
 
 
