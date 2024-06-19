@@ -8,9 +8,26 @@ import pyautogui
 from botpy.message import Message
 from random import randint
 
+def get_remain(url, headers, payload):
+    """查询电费余额"""
+
+    # 发送POST请求, 提取json中的errmsg
+    response = requests.request("POST", url, headers=headers, data=payload)
+    raw = response.json()["errmsg"]
+
+    # 从请求中提取余额并返回
+    remain = re.search(r"\d+\.\d+", raw).group(0)
+    return remain
+
+
 # 读取机器人的id和访问密钥
 with open("./json/secret_info.json") as info_file:
     secret = json.load(info_file)
+
+# 读取查询电费的url和payload表单, 获取headers
+with open("./json/electricity.json") as info_file:
+    elec_info = json.load(info_file)
+    headers = elec_info["headers"]
 
 # 读取今天的日期
 today_date = datetime.date.today().strftime('%d')
@@ -384,6 +401,37 @@ class MyClient(botpy.Client):
             farm['exp'] = farm_exp
             user_data['farm'] = farm
 
+        # 功能：查询电费
+        elif content[0:3] == "/电费":
+            print(f"{user_name}查询了电费")
+
+            # 获取用户查询的寝室号
+            room = content[4:]
+
+            # 发送提示
+            await message.reply(content=f"正在查询{room}的空调电量和公共电量...")
+
+            try:
+                # 查询1号房间空调余量
+                url = elec_info[f"{room}-1"]["url"]
+                payload = elec_info[f"{room}-1"]["payload"]
+                remain_1 = get_remain(url, headers=headers, payload=payload)
+
+                # 查询2号房间空调余量
+                url = elec_info[f"{room}-2"]["url"]
+                payload = elec_info[f"{room}-2"]["payload"]
+                remain_2 = get_remain(url, headers=headers, payload=payload)
+
+                # 查询公共电费余量
+                url = elec_info[f"{room}"]["url"]
+                payload = elec_info[f"{room}"]["payload"]
+                remain = get_remain(url, headers=headers, payload=payload)
+
+                # 发送结果
+                await message.reply(
+                    content=f"{room}-1小寝空调电量剩余：{remain_1}\n{room}-2小寝空调电量剩余：{remain_2}\n{room}公共电量剩余：{remain}")
+            except KeyError:
+                await message.reply(content=f"抱歉，{room}暂时不可查询，或者该房间不存在！")
 
         # 功能：发送已有功能列表
         elif content[-2:] == "/帮助":

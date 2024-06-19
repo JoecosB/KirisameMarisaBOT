@@ -1,0 +1,49 @@
+{
+  "headers": {
+      "Host": "wxcard.njupt.edu.cn",
+      "Accept": "text/html, */*; q=0.01",
+      "X-Requested-With": "XMLHttpRequest",
+      "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 NetType/WIFI MicroMessenger/6.8.0(0x16080000) MacWechat/3.8.7(0x13080710) XWEB/1191 Flue",
+      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "Origin": "http://wxcard.njupt.edu.cn",
+      "Referer": "http://wxcard.njupt.edu.cn/wechat/elecpay/queryelec.html",
+      "Accept-Language": "zh-CN,zh;q=0.9",
+      "Cookie": "JSESSIONID=055CE686D93FD76F768DDC07EEC3B3C6; Pg9zLpq2aFPgS=60Ii6SY65O7HGLwZ1SQc0DrnWouorVF.NSLPhwDLR2OuNzLtl3stpL9JRgWzcm0BH9whnWTAqn9hapVchW1ztx.a; Pg9zLpq2aFPgT=0j9hrE5URvWNiiN3czr_AH4IEQEP1pi1uonw_W55GvP7qVuCrTXA3nnBx3DGc5OXA9vTy74cody9_rScOfs8Mtnf0t1T4PyLJbNPpNGRfM_KaxQIfnjWdzLjfamJVsAv5ktKfnK1V6HkrgnsWRu5r.hjjC49hM0bogADWFlFuf2DfWuB1MzT.soulAGK_tjHgOHCaOALl9r03sefBaZQNvhGT4QwqDKc6v.dBmjl0jU2BRJ6iwy40fzvNNzWMex.wWpJovnbFwCONv2ldCnjtaghsOfRRM_bmlb3XLBjsmOfwdIV8Mmm0iYLTch7K1rFKRkcrtuuGxZk9F94zFiUXec_tC_svQ6W6zwdKUGi3vqs.8zgpvYU.S31UcZHeri9DFDf25l6JAeA2RB7jrNMK9mZ60KXXUbZMwxnxgdzzrEG"
+    },
+  "307-1": {
+    "url": "http://wxcard.njupt.edu.cn/wechat/basicQuery/queryElecRoomInfo.html?K3bzh5pD=0jywlIalqEWceSY.HfXl.BxdKc0n2dwZR3iRN8BV1flA48J5zwdfkEqwGcQXsF1LN79dcEikF39cGsBzMtmRBskTiOa9E2xA4",
+    "payload" : "aid=0030000000003802&area=%7B%22area%22%3A%22%22%2C%22areaname%22%3A%22%22%7D&building=%7B%22building%22%3A%22%E8%8F%8A%E8%8B%9121%E6%A0%8B%22%2C%22buildingid%22%3A%22000028%22%7D&floor=%7B%22floorid%22%3A%223%22%2C%22floor%22%3A%223%E5%B1%82%22%7D&room=%7B%22roomid%22%3A%2200003336%22%2C%22room%22%3A%22307-1%E7%A9%BA%E8%B0%83%22%7D"
+  },
+  "307-2": {
+    "url": "http://wxcard.njupt.edu.cn/wechat/basicQuery/queryElecRoomInfo.html?K3bzh5pD=08fiTwAlqEWceSY.HfXl.BxdKc0n2dwZR3iRN8BV1flA48J5zwdfkEcr1BbWrmh6mqkWMVbNBJkkPmFskIR1lamoPNxTJGu5W",
+    "payload": "aid=0030000000003802&area=%7B%22area%22%3A%22%22%2C%22areaname%22%3A%22%22%7D&building=%7B%22building%22%3A%22%E8%8F%8A%E8%8B%9121%E6%A0%8B%22%2C%22buildingid%22%3A%22000028%22%7D&floor=%7B%22floorid%22%3A%223%22%2C%22floor%22%3A%223%E5%B1%82%22%7D&room=%7B%22roomid%22%3A%2200003337%22%2C%22room%22%3A%22307-2%E7%A9%BA%E8%B0%83%22%7D"
+  },
+  "307": {
+    "url": "http://wxcard.njupt.edu.cn/wechat/basicQuery/queryElecRoomInfo.html?K3bzh5pD=0ssmc.qlqEWceSY.HfXl.BxdKc0n2dwZR3iRN8BV1flA48J5zwdfkElFupWthxVpRrPzpUdk3J62.u7nLVK60UJ4j_2iewSTJ",
+    "payload": "aid=0030000000003802&area=%7B%22area%22%3A%22%22%2C%22areaname%22%3A%22%22%7D&building=%7B%22building%22%3A%22%E8%8F%8A%E8%8B%9121%E6%A0%8B%22%2C%22buildingid%22%3A%22000028%22%7D&floor=%7B%22floorid%22%3A%223%22%2C%22floor%22%3A%223%E5%B1%82%22%7D&room=%7B%22roomid%22%3A%2200003338%22%2C%22room%22%3A%22307%E5%85%AC%E7%94%A8%22%7D"
+  },
+  "308-1": {
+    "url": "http://wxcard.njupt.edu.cn/wechat/basicQuery/queryElecRoomInfo.html?K3bzh5pD=054U07AlqEWceSY.HfXl.BxdKc0n2dwZR3iRN8BV1flA48J5zwdfkEkjPb9vieBI42FwZGeXruJjy4ITZvvbkBK0ECTNePF9t",
+    "payload": "aid=0030000000003802&area=%7B%22area%22%3A%22%22%2C%22areaname%22%3A%22%22%7D&building=%7B%22building%22%3A%22%E8%8F%8A%E8%8B%9121%E6%A0%8B%22%2C%22buildingid%22%3A%22000028%22%7D&floor=%7B%22floorid%22%3A%223%22%2C%22floor%22%3A%223%E5%B1%82%22%7D&room=%7B%22roomid%22%3A%2200003339%22%2C%22room%22%3A%22308-1%E7%A9%BA%E8%B0%83%22%7D"
+  },
+  "308-2": {
+    "url": "http://wxcard.njupt.edu.cn/wechat/basicQuery/queryElecRoomInfo.html?K3bzh5pD=0AK71XAlqEWceSY.HfXl.BxdKc0n2dwZR3iRN8BV1flA48J5zwdfkEoXJvyx5dQwxTHkhiZVKl6GhSvjMmKk1ZY0MiBCq6DUz",
+    "payload": "aid=0030000000003802&area=%7B%22area%22%3A%22%22%2C%22areaname%22%3A%22%22%7D&building=%7B%22building%22%3A%22%E8%8F%8A%E8%8B%9121%E6%A0%8B%22%2C%22buildingid%22%3A%22000028%22%7D&floor=%7B%22floorid%22%3A%223%22%2C%22floor%22%3A%223%E5%B1%82%22%7D&room=%7B%22roomid%22%3A%2200003340%22%2C%22room%22%3A%22308-2%E7%A9%BA%E8%B0%83%22%7D"
+  },
+  "308": {
+    "url": "http://wxcard.njupt.edu.cn/wechat/basicQuery/queryElecRoomInfo.html?K3bzh5pD=0UqPAqGlqEWceSY.HfXl.BxdKc0n2dwZR3iRN8BV1flA48J5zwdfkEoy27OoMhCV.8e3EOlt_Ah9L.Poky9YD6jXMcLZUI.Qz",
+    "payload": "aid=0030000000003802&area=%7B%22area%22%3A%22%22%2C%22areaname%22%3A%22%22%7D&building=%7B%22building%22%3A%22%E8%8F%8A%E8%8B%9121%E6%A0%8B%22%2C%22buildingid%22%3A%22000028%22%7D&floor=%7B%22floorid%22%3A%223%22%2C%22floor%22%3A%223%E5%B1%82%22%7D&room=%7B%22roomid%22%3A%2200003341%22%2C%22room%22%3A%22308%E5%85%AC%E7%94%A8%22%7D"
+  },
+  "309-1": {
+    "url": "http://wxcard.njupt.edu.cn/wechat/basicQuery/queryElecRoomInfo.html?K3bzh5pD=01hg3kGlqEHnmMw.0m8R.ICJoLjYEeB0ku_HHTLfyOrB3c1rh0bmVEk49MGNjW6wEa2hiclvOQS9jC9NVBQet8JchNBmjd7MY",
+    "payload" : "aid=0030000000003802&area=%7B%22area%22%3A%22%22%2C%22areaname%22%3A%22%22%7D&building=%7B%22building%22%3A%22%E8%8F%8A%E8%8B%9121%E6%A0%8B%22%2C%22buildingid%22%3A%22000028%22%7D&floor=%7B%22floorid%22%3A%223%22%2C%22floor%22%3A%223%E5%B1%82%22%7D&room=%7B%22roomid%22%3A%2200003342%22%2C%22room%22%3A%22309-1%E7%A9%BA%E8%B0%83%22%7D"
+  },
+  "309-2": {
+    "url": "http://wxcard.njupt.edu.cn/wechat/basicQuery/queryElecRoomInfo.html?K3bzh5pD=0ehUhOAlqEWceSY.HfXl.BxdKc0n2dwZR3iRN8BV1flA48J5zwdfkEtsro8zUl1ojMSMcWvl0Lu2L637xC_W3FgH0VBq6Bqs3",
+    "payload": "aid=0030000000003802&area=%7B%22area%22%3A%22%22%2C%22areaname%22%3A%22%22%7D&building=%7B%22building%22%3A%22%E8%8F%8A%E8%8B%9121%E6%A0%8B%22%2C%22buildingid%22%3A%22000028%22%7D&floor=%7B%22floorid%22%3A%223%22%2C%22floor%22%3A%223%E5%B1%82%22%7D&room=%7B%22roomid%22%3A%2200003343%22%2C%22room%22%3A%22309-2%E7%A9%BA%E8%B0%83%22%7D"
+  },
+  "309": {
+    "url": "http://wxcard.njupt.edu.cn/wechat/basicQuery/queryElecRoomInfo.html?K3bzh5pD=0BeS8calqEHnmMw.0m8R.ICJoLjYEeB0ku_HHTLfyOrB3c1rh0bmVElEDT.RXDJOMIl7fQZ8FJPQS0VovDGU2l5uCvx07SDUF",
+    "payload": "aid=0030000000003802&area=%7B%22area%22%3A%22%22%2C%22areaname%22%3A%22%22%7D&building=%7B%22building%22%3A%22%E8%8F%8A%E8%8B%9121%E6%A0%8B%22%2C%22buildingid%22%3A%22000028%22%7D&floor=%7B%22floorid%22%3A%223%22%2C%22floor%22%3A%223%E5%B1%82%22%7D&room=%7B%22roomid%22%3A%2200003344%22%2C%22room%22%3A%22309%E5%85%AC%E7%94%A8%22%7D"
+  }
+}
